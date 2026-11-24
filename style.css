@@ -1,0 +1,441 @@
+/* Базові скидання та змінні */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --text-main: #2b3648;
+  --text-muted: #5a6577;
+  --accent-red: #e84c5c;
+  --accent-blue: #3478b5;
+  --bg-page: #ffffff;
+  --bg-panel: #f5f5f5;
+  --bg-btn: #efefef;
+  --bg-btn-hover: #e2e4e8;
+  --border-card: #e5e5e5;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  min-width: 375px;
+  line-height: 1.4;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+/* Шапка */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-main);
+  letter-spacing: -0.3px;
+}
+
+.logo-amp {
+  display: inline-block;
+  color: var(--accent-red);
+  font-weight: 700;
+  font-style: italic;
+  transform: rotate(-6deg);
+}
+
+/* Приховані радіокнопки фільтра */
+.filter-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================================
+   1. МОБІЛЬНА ВЕРСІЯ (375px – 730px)
+   ========================================================= */
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.calorie-filter {
+  display: none;
+}
+
+/* 2 колонки x 3 рядки: grid-auto-flow: column зберігає точний порядок кнопок з макета */
+.filter-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: column;
+  gap: 10px 14px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 12px;
+  background-color: var(--bg-btn);
+  border-radius: 5px;
+  font-size: 16px;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: var(--bg-btn-hover);
+}
+
+/* Підсвічування активного фільтра */
+#filter-pie:checked ~ .sidebar .filter-btn[for="filter-pie"],
+#filter-roll:checked ~ .sidebar .filter-btn[for="filter-roll"],
+#filter-syrnyky:checked ~ .sidebar .filter-btn[for="filter-syrnyky"],
+#filter-pastry:checked ~ .sidebar .filter-btn[for="filter-pastry"],
+#filter-cake:checked ~ .sidebar .filter-btn[for="filter-cake"] {
+  background-color: var(--text-main);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Логіка фільтрації карток без JS */
+#filter-pie:checked ~ .gallery .card:not([data-category="pie"]),
+#filter-roll:checked ~ .gallery .card:not([data-category="roll"]),
+#filter-syrnyky:checked ~ .gallery .card:not([data-category="syrnyky"]),
+#filter-pastry:checked ~ .gallery .card:not([data-category="pastry"]),
+#filter-cake:checked ~ .gallery .card:not([data-category="cake"]) {
+  display: none;
+}
+
+/* Галерея на мобільних: 1 колонка, відображаються лише фото */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.card {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.card-img-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.card-title,
+.card-calories {
+  display: none;
+}
+
+/* Футер для мобільних: 3 рядки ліворуч */
+.footer {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.footer-contacts {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-email {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+
+.footer-email::before {
+  content: "✉ ";
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* =========================================================
+   2. ПЛАНШЕТНА ВЕРСІЯ (730px – 1200px)
+   ========================================================= */
+@media (min-width: 730px) {
+  .container {
+    padding: 24px 24px 28px;
+  }
+
+  .logo {
+    font-size: 38px;
+  }
+
+  /* 3 колонки x 2 рядки */
+  .filter-list {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    gap: 12px 16px;
+  }
+
+  /* Сітка карток 3 в ряд */
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .card {
+    background-color: #fbfbfb;
+    border: 1px solid var(--border-card);
+    border-radius: 6px;
+    padding: 10px 10px 14px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-img-wrap {
+    aspect-ratio: 4 / 3;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-main);
+  }
+
+  .card-title strong {
+    font-weight: 700;
+  }
+
+  /* Футер для планшета: контакти у 2 рядки ліворуч, копірайт знизу праворуч */
+  .footer {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid #eeeeee;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+/* =========================================================
+   3. ДЕСКТОПНА ВЕРСІЯ (> 1200px)
+   ========================================================= */
+@media (min-width: 1201px) {
+  .container {
+    padding: 28px 32px 32px;
+  }
+
+  .logo {
+    font-size: 42px;
+  }
+
+  /* Основний макет: галерея ліворуч + сайдбар праворуч */
+  .catalog {
+    display: grid;
+    grid-template-columns: 1fr 270px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .gallery {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .sidebar {
+    grid-column: 2;
+    grid-row: 1;
+    background-color: var(--bg-panel);
+    border-radius: 6px;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* Макет фільтра калорій */
+  .calorie-filter {
+    display: block;
+    text-align: center;
+  }
+
+  .calorie-title {
+    font-size: 16px;
+    margin-bottom: 22px;
+    color: var(--text-main);
+  }
+
+  .range-mockup {
+    position: relative;
+    height: 16px;
+    margin: 0 12px 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .range-track {
+    width: 100%;
+    height: 2px;
+    background-color: #d6d9de;
+  }
+
+  .range-fill {
+    position: absolute;
+    left: 14%;
+    width: 48%;
+    height: 3px;
+    background-color: #2f7ed8;
+  }
+
+  .range-thumb {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #263238;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .range-thumb--left {
+    left: 14%;
+  }
+
+  .range-thumb--right {
+    left: 62%;
+  }
+
+  .calorie-value {
+    font-size: 15px;
+    color: var(--text-main);
+  }
+
+  /* Вертикальний список кнопок у сайдбарі */
+  .filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-btn {
+    background-color: #e9eaec;
+    padding: 12px 16px;
+  }
+
+  /* Картки в ряду мають однакову висоту (розтягуються по висоті рядка Grid) */
+  .card {
+    padding: 0;
+    background-color: #fbfbfb;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Верхня частина картки займає весь вільний простір, вирівнюючи нижню лінію */
+  .card-top {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 14px 16px;
+  }
+
+  /* Фото завжди однакового розміру; якщо висота менша — вирівнюється по верхньому краю */
+  .card-img-wrap {
+    width: 140px;
+    height: 105px;
+    aspect-ratio: auto;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .card-img {
+    width: 100%;
+    height: 100%;
+    max-height: 105px;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .card-title {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .card-title strong {
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Роздільна лінія та калорії завжди на одному рівні в межах ряду */
+  .card-calories {
+    display: block;
+    margin-top: auto;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--border-card);
+    font-size: 15px;
+    color: var(--text-main);
+  }
+
+  /* Футер для десктопу: все в один рядок */
+  .footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    align-items: center;
+  }
+
+  .footer-contacts {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .footer-email {
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  .footer-email:hover {
+    text-decoration: underline;
+  }
+
+  .footer-email::before {
+    content: none;
+  }
+}
